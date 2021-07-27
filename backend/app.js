@@ -1,13 +1,12 @@
 import express, { json } from 'express';
 import mongoose from "mongoose";
 
-
 const app = express();
 
 app.use(express.json());
 app.use(express.text());
 
-mongoose.connect('mongodb://localhost:27017/myapp', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect('mongodb://localhost:27017/userclicks', { useNewUrlParser: true, useUnifiedTopology: true });
 
 const userClicksSchema = {
     name: String,
@@ -15,20 +14,42 @@ const userClicksSchema = {
     type: String
 }
 
-const userClicks = mongoose.model('click', userClicksSchema);
+const Userclick = mongoose.model('Userclick', userClicksSchema);
 
 app.get("/", (req, res) => {
     res.send("Server running on PORT 5000")
 })
 
 app.post("/userclicks", (req, res) => {
-    try {
-        console.log(req.body)
-        res.send("success")
-    } catch (error) {
-        res.error(error)
-    }
+    const data = JSON.parse(req.body);
 
+    data.forEach(element => {
+        Userclick.findOne({ name: element.name }, function (err, foundItem) {
+            console.log(element)
+            if (foundItem) {
+                console.log(foundItem)
+                Userclick.update({ name: element.name },
+                    { name: foundItem.name, clicks: foundItem.clicks + element.clicks, type: foundItem.type },
+                    { overwrite: true },
+                    function (error) {
+                        console.log(error)
+                    }
+                )
+            } else {
+                const newData = new Userclick({
+                    name: element.name,
+                    clicks: element.clicks,
+                    type: element.type,
+                })
+                newData.save(function (error) {
+                    console.log(error)
+                })
+            }
+            if (err) {
+                console.log(err)
+            }
+        })
+    })
 })
 
 app.listen(5000, () => {

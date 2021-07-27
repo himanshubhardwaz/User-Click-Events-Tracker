@@ -4,11 +4,23 @@ let itemFromLocalStorage;
 
 document.onclick = clickListener;
 
+function validURL(str) {
+    var pattern = new RegExp('^(https?:\\/\\/)?' + // protocol
+        '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
+        '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+        '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+        '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+        '(\\#[-a-z\\d_]*)?$', 'i'); // fragment locator
+    return !!pattern.test(str);
+}
+
 function clickListener(e) {
     e.preventDefault();
 
     let clickedElement = e.target;
-    console.log("clicked ", e.target.ownerDocument.activeElement.href);
+    const link = e.target.ownerDocument.activeElement.href;
+
+    const isValidUrl = validURL(link);
 
     // let name = clickedElement.innerHTML;
     // name = name.replace(/\n/g, '');
@@ -23,9 +35,11 @@ function clickListener(e) {
     console.log("element", element);
 
     if (element) {
-        element.count += 1;
+        element.clicks += 1;
     } else {
-        arrayWithElements.push({ name, count: 1 })
+        isValidUrl ?
+            arrayWithElements.push({ name, clicks: 1, type: "Button" }) :
+            arrayWithElements.push({ name, clicks: 1, type: "Text/ Image/ Icon" })
     }
 
     // arrayWithElements.push({ name, clickedElement });
