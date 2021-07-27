@@ -20,6 +20,17 @@ app.get("/", (req, res) => {
     res.send("Server running on PORT 5000")
 })
 
+app.get("/userclicks", (req, res) => {
+    Userclick.find({}, function (err, foundData) {
+        if (!err) {
+            res.send(foundData)
+        }
+        else {
+            res.send(err.message)
+        }
+    })
+})
+
 app.post("/userclicks", (req, res) => {
     const data = JSON.parse(req.body);
 
