@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import Data from "./components/Data"
 import CardComponent from "./components/Card"
+import Chart from "./components/Chart"
 import axios from "axios"
 import './App.css';
 
@@ -33,15 +34,20 @@ function App() {
   }, [data, setData])
 
   return (
-
-    <div>
-      <div className="cards" >
-        <CardComponent header="Button" title="Total buttons click" body={`Total Button clicks is ${finalCount}`} />
-        <CardComponent header="Text" title="Total Images click" body={`Total Button clicks is ${totalClicks - finalCount}`} />
-        <CardComponent header="Image" title="Total Text click" body={`Total Button clicks is ${totalClicks - finalCount}`} />
-      </ div>
-      <Data data={data} />
-    </div >
+    data &&
+    <>
+      <div>
+        <div className="cards" >
+          <CardComponent header="Button" title="Total buttons click" body={`Total Button clicks is ${finalCount}`} />
+          <CardComponent header="Text" title="Total Images click" body={`Total Button clicks is ${totalClicks - finalCount}`} />
+          <CardComponent header="Image" title="Total Text click" body={`Total Button clicks is ${totalClicks - finalCount}`} />
+        </ div>
+        <div className="chart">
+          <Chart chartData={data} />
+        </div>
+        <Data data={data} />
+      </div>
+    </>
   );
 }
 
