@@ -70,5 +70,6 @@ document.addEventListener('visibilitychange', function logData() {
     if (document.visibilityState === 'hidden') {
         let blob = new Blob([(localStorage.getItem("userclicks"))], { type: 'text/plain' });
         navigator.sendBeacon('http://localhost:5000/userclicks', blob);
+        localstorage.removeItem('userclicks');
     }
 })
